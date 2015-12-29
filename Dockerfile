@@ -1,7 +1,7 @@
 FROM debian:latest
 MAINTAINER Drew Crawford
 
-ENV SWIFT_TAG="swift-2.2-SNAPSHOT-2015-12-22-a" RUNTIME_PACKAGES="libedit2 libpython2.7 libxml2 libicu52" BUILDTIME_PACKAGES="git ca-certificates python clang ninja-build cmake uuid-dev libbsd-dev libicu-dev pkg-config libedit-dev file libxml2-dev python-dev libncurses5-dev libsqlite3-dev libreadline6-dev rsync"
+ENV SWIFT_TAG="swift-2.2-SNAPSHOT-2015-12-22-a" RUNTIME_PACKAGES="clang libedit2 libpython2.7 libxml2 libicu52" BUILDTIME_PACKAGES="git ca-certificates python ninja-build cmake uuid-dev libbsd-dev libicu-dev pkg-config libedit-dev file libxml2-dev python-dev libncurses5-dev libsqlite3-dev libreadline6-dev rsync"
 
 RUN \
 # Create a directory to work in \

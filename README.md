@@ -1,4 +1,8 @@
-# swift
+# Official repository
+
+https://code.sealedabstract.com/drewcrawford/swift-linux
+
+# swift-linux
 
 This is the smallest Swift Docker image that I know how to make.  I use this image as a production base for Swift language projects.
 
@@ -10,9 +14,37 @@ The "supported" Swift configuration is Ubuntu.  However, I run Debian, and prefe
 
 Just pull from drewcrawford/swift.  It's installed to `/usr/local`.
 
+Then you can compile swift programs, for example, 
+
+```
+$ docker run -it drewcrawford/swift:latest
+# echo 'print("hello world")' > test.swift
+# swiftc tests.swift
+# exit
+$ docker cp 4afdd757d428:test .
+```
+
+
+Now you can build a docker image with only your program:
+
+```
+FROM drewcrawford/swift-runtime:latest
+ADD test
+ENTRYPOINT ["test"]
+```
+
 ## Build
 
-You can build with `docker build .`.  You may want to up the number of cores if you're using VirtualBox, because it takes a long time single-threaded.
+You can build the compiler with `docker build .`.  You may want to up the number of cores if you're using VirtualBox, because it takes a long time single-threaded.
+
+After building the swift image, you can build the separate swift-runtime image via
+
+```
+id=$(docker create drewcrawford/swift:latest)
+docker cp $id:usr/local/lib/swift - > swiftlibs.tar
+docker rm -v $id
+docker build -f Runtime.dockerfile .
+```
 
 ### Source
 
@@ -34,10 +66,10 @@ A: [No.](https://lists.swift.org/pipermail/swift-users/Week-of-Mon-20151228/0006
 
 ### Q: How large is this image?
 
-A: 472.2 MB, at the time of this writing.  125.1 of that is Debian, so the delta of Swift itself is 347.1MB.
+A: 664.6 MB, at the time of this writing.  125.1 of that is Debian.  We uninstall all the build dependencies, so I don't know how to make it smaller.
 
-We uninstall all the build dependencies, so I don't know how to make it smaller.
+Note that the distributable `swift-runtime` image is only 187.9 MB.
 
 ### Q: Do I need this image to run Swift binaries?
 
-A: Probably not.  You really only need this image to build Swift programs.  You should use a volume or a `docker cp` to move the built products into your own image, that does not have Swift installed, for distribution.
+A: Probably not.  You probably only need the (smaller) `swift-runtime` image for containers that are supposed to contain compiled Swift code.
