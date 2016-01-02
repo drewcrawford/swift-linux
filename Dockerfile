@@ -1,7 +1,9 @@
 FROM debian:latest
 MAINTAINER Drew Crawford
 
-ENV SWIFT_TAG="swift-2.2-SNAPSHOT-2015-12-22-a" RUNTIME_PACKAGES="clang libedit2 libpython2.7 libxml2 libicu52" BUILDTIME_PACKAGES="git ca-certificates python ninja-build cmake uuid-dev libbsd-dev libicu-dev pkg-config libedit-dev file libxml2-dev python-dev libncurses5-dev libsqlite3-dev libreadline6-dev rsync"
+ENV SWIFT_TAG="__TAG__" RUNTIME_PACKAGES="clang libedit2 libpython2.7 libxml2 libicu52" BUILDTIME_PACKAGES="git ca-certificates python ninja-build cmake uuid-dev libbsd-dev libicu-dev pkg-config libedit-dev file libxml2-dev python-dev libncurses5-dev libsqlite3-dev libreadline6-dev rsync"
+
+ADD SR-437.patch /
 
 RUN \
 # Create a directory to work in \
@@ -20,6 +22,13 @@ cd swift && \
 # In practice what you're supposed to do (I think!  It's not documented!) is check out the same snapshot tag  \
 # Not all the folders have them (where do some of them come from??) but we'll just try them all \
 find ../ -maxdepth 1 -type d  -exec bash -c '(cd {} && echo checking out in `pwd` && git checkout $SWIFT_TAG)' \; && \
+\
+# Apply patches here \
+cd ../swift-corelibs-foundation && \
+ls && \
+git apply < /SR-437.patch && \
+cat Foundation/NSPathUtilities.swift && \
+cd ../swift && \
 \
 # And now we build, like a good little linuxen. \
 # I believe this is what the linux build script does.  In practice, this builds a system into /tmp/install and then tars it up. \

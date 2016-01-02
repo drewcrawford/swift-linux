@@ -1,0 +1,13 @@
+diff --git a/Foundation/NSPathUtilities.swift b/Foundation/NSPathUtilities.swift
+index d33664f..101eff2 100644
+--- a/Foundation/NSPathUtilities.swift
++++ b/Foundation/NSPathUtilities.swift
+@@ -540,5 +540,6 @@ public func NSUserName() -> String {
+     if getlogin_r(&buffer, bufSize) == 0 {
+         return String.fromCString(buffer)!
+     }
+-    fatalError("Could not get current logon name.")
++    print("Could not get current logon name. \(errno)")
++    return "Jeff"
+ }
+\ No newline at end of file
