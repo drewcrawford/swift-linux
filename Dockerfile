@@ -3,7 +3,8 @@ MAINTAINER Drew Crawford
 
 ENV SWIFT_TAG="__TAG__" RUNTIME_PACKAGES="clang libedit2 libpython2.7 libxml2 libicu52" BUILDTIME_PACKAGES="git ca-certificates python ninja-build cmake uuid-dev libbsd-dev libicu-dev pkg-config libedit-dev file libxml2-dev python-dev libncurses5-dev libsqlite3-dev libreadline6-dev rsync"
 
-ADD SR-437.patch /
+#apply patches here
+# ADD SR-437.patch /
 
 RUN \
 # Create a directory to work in \
@@ -24,10 +25,10 @@ cd swift && \
 find ../ -maxdepth 1 -type d  -exec bash -c '(cd {} && echo checking out in `pwd` && git checkout $SWIFT_TAG)' \; && \
 \
 # Apply patches here \
-cd ../swift-corelibs-foundation && \
-ls && \
-git apply < /SR-437.patch && \
-cat Foundation/NSPathUtilities.swift && \
+# cd ../swift-corelibs-foundation && \
+# git apply < /SR-437.patch && \
+# cat Foundation/NSPathUtilities.swift && \
+# \
 cd ../swift && \
 \
 # And now we build, like a good little linuxen. \
