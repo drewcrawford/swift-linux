@@ -4,15 +4,19 @@ echo "Type tag name"
 read tag
 WORKDIR=/tmp
 
-sed "s/__TAG__/$tag/" Dockerfile > Dockerfile.tagged
+sed "s/__TAG__/$tag/" build.dockerfile > Dockerfile.tagged
 docker build -f Dockerfile.tagged -t swift-tmp .
-docker save swift-tmp > $WORKDIR/swift_tmp.tar
-#figure out where to use from
-FROM=`docker history -q swift-tmp | tail -n 3 | head -n 1`
-PATH="/usr/local/opt/gnu-tar/libexec/gnubin:$PATH"
-sudo docker-squash -from $FROM -i "$WORKDIR/swift_tmp.tar" -o "$WORKDIR/swift_squashed.tar" -t $username/swift:$tag
-docker load -i $WORKDIR/swift_squashed.tar
+echo "Moving swift.tar.gz to new container..."
+id=$(docker create swift-tmp)
+docker cp $id:/tmp/swift.tar.gz .
+rm -rf fakeroot
+mkdir -p fakeroot/usr/local
+tar xf swift.tar.gz -C fakeroot/usr/local --strip-components 1
+tar cf swift-local.tar.gz -C fakeroot .
+rm -rf fakeroot
+docker build -f swift.dockerfile -t $username/swift:$tag .
 docker tag $username/swift:$tag $username/swift:latest 
+echo "Building runtime image..."
 id=$(docker create drewcrawford/swift:latest)
 docker cp $id:usr/local/lib/swift - > swiftlibs.tar
 docker build -f Runtime.dockerfile -t $username/swift-runtime:latest .
