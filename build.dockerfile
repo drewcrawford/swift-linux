@@ -3,8 +3,8 @@ MAINTAINER Drew Crawford
 
 ENV SWIFT_TAG="__TAG__" RUNTIME_PACKAGES="clang libedit2 libpython2.7 libxml2 libicu52" BUILDTIME_PACKAGES="git ca-certificates python ninja-build cmake uuid-dev libbsd-dev libicu-dev pkg-config libedit-dev file libxml2-dev python-dev libncurses5-dev libsqlite3-dev libreadline6-dev rsync"
 
-#apply patches here
-# ADD SR-437.patch /
+# for libdispatch, we also need more stuff
+ENV BUILDTIME_PACKAGES="$BUILDTIME_PACKAGES make gobjc automake autoconf libtool pkg-config systemtap-sdt-dev libblocksruntime-dev libkqueue-dev libpthread-workqueue-dev libbsd-dev"
 
 # Create a directory to work in 
 RUN mkdir swift-dev
@@ -18,6 +18,9 @@ WORKDIR /swift-dev/swift
 # submodules?  Where we're going, we don't need submodules! 
 RUN ./utils/update-checkout --clone
 
+#libdispatch needs submodules tho, LOL
+RUN cd ../swift-corelibs-libdispatch && git submodule init && git submodule update
+
 # The silly update-checkout script does not understand matching the swift checkout ref 
 # In practice what you're supposed to do (I think!  It's not documented!) is check out the same snapshot tag  
 # Not all the folders have them (where do some of them come from??) but we'll just try them all 
@@ -26,11 +29,14 @@ ADD update-tags.sh /swift-dev/update-tags.sh
 RUN bash /swift-dev/update-tags.sh
 
 # Apply patches here 
-# cd ../swift-corelibs-foundation
-# git apply < /SR-437.patch
-# cat Foundation/NSPathUtilities.swift
+ADD LIBDISPATCH_PR_43.patch /swift-dev/
+ADD SWIFT_PR_1212.patch /swift-dev/
+# RUN cd ../swift-corelibs-libdispatch && git apply < ../LIBDISPATCH_PR_43.patch
+RUN git config --global user.email "drew@sealedabstract.com" && git config --global user.name "Drew Crawford"
+RUN git am -3 < ../SWIFT_PR_1212.patch
 
 # And now we build, like a good little linuxen. 
 # I believe this is what the linux build script does.  In practice, this builds a system into /tmp/install and then tars it up. 
-RUN ./utils/build-script --preset=buildbot_linux install_destdir="/tmp/install" installable_package="/tmp/swift.tar.gz"
+ADD presets.ini /swift-dev/swift/presets.ini
+RUN ./utils/build-script --preset=drew --preset-file=presets.ini --preset-file=utils/build-presets.ini installable_package="/tmp/swift.tar.gz" install_destdir="/tmp/install/"
 
