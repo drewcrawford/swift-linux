@@ -29,11 +29,11 @@ ADD update-tags.sh /swift-dev/update-tags.sh
 RUN bash /swift-dev/update-tags.sh
 
 # Apply patches here 
-ADD LIBDISPATCH_PR_43.patch /swift-dev/
-ADD SWIFT_PR_1212.patch /swift-dev/
-# RUN cd ../swift-corelibs-libdispatch && git apply < ../LIBDISPATCH_PR_43.patch
-RUN git config --global user.email "drew@sealedabstract.com" && git config --global user.name "Drew Crawford"
-RUN git am -3 < ../SWIFT_PR_1212.patch
+# ADD SAMPLE.patch /swift-dev/
+# RUN cd ../swift-corelibs-libdispatch && git apply < ../SAMPLE.patch
+# or for AM
+# RUN git config --global user.email "drew@sealedabstract.com" && git config --global user.name "Drew Crawford"
+# RUN git am -3 < ../SAMPLE.patch
 
 # And now we build, like a good little linuxen. 
 # I believe this is what the linux build script does.  In practice, this builds a system into /tmp/install and then tars it up. 
