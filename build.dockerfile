@@ -34,11 +34,6 @@ RUN bash /swift-dev/update-tags.sh
 # or for AM
 # RUN git config --global user.email "drew@sealedabstract.com" && git config --global user.name "Drew Crawford"
 # RUN git am -3 < ../SAMPLE.patch
-ADD foundation-fix.patch /swift-dev/
-ADD sr-761-b.patch /swift-dev/
-RUN git config --global user.email "drew@sealedabstract.com" && git config --global user.name "Drew Crawford"
-RUN cd ../swift-corelibs-foundation && git am ../foundation-fix.patch
-RUN cd ../swift-corelibs-libdispatch && git am ../sr-761-b.patch && git submodule update
 
 # And now we build, like a good little linuxen. 
 # I believe this is what the linux build script does.  In practice, this builds a system into /tmp/install and then tars it up. 
