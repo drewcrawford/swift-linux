@@ -1,5 +1,10 @@
 #!/bin/bash
 set -e
+if [ "$SWIFT_TAG" == "master" ]; then
+    echo "Not updating tags; you're building master."
+    exit 0
+fi
+
 #projects that have no tag
 NOTAG=("swift-dev" "swift-corelibs-libdispatch")
 for file in `find ../ -maxdepth 1 -type d`; do 
