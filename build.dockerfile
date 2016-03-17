@@ -39,6 +39,9 @@ RUN bash /swift-dev/update-tags.sh
 RUN git config --global user.email "drew@sealedabstract.com" && git config --global user.name "Drew Crawford"
 RUN cd ../swift-corelibs-foundation && git cherry-pick 3cc083b --allow-empty
 
+# use hubertus's newest libdispatch
+RUN cd ../swift-corelibs-libdispatch/libpwq && git checkout origin/master
+
 # And now we build, like a good little linuxen. 
 # I believe this is what the linux build script does.  In practice, this builds a system into /tmp/install and then tars it up. 
 ADD presets.ini /swift-dev/swift/presets.ini
