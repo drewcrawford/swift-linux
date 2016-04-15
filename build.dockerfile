@@ -39,7 +39,12 @@ RUN bash /swift-dev/update-tags.sh
 RUN cd ../swift-corelibs-libdispatch/libpwq && git checkout origin/master
 
 # apply PR 62
-RUN cd ../swift-corelibs-libdispatch && git fetch origin pull/62/head:PR62 && git checkout PR62
+RUN git config --global user.email "drew@sealedabstract.com" && git config --global user.name "Drew Crawford"
+RUN cd ../swift-corelibs-libdispatch && git fetch origin pull/62/head:PR62 && git merge PR62
+
+# apply ⛏ 1242
+ADD 0001-Don-t-run-libdispatch-tests.patch /swift-dev/
+RUN git am -3 ../0001-Don-t-run-libdispatch-tests.patch
 
 # And now we build, like a good little linuxen. 
 # I believe this is what the linux build script does.  In practice, this builds a system into /tmp/install and then tars it up. 
