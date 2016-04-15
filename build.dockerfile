@@ -38,6 +38,9 @@ RUN bash /swift-dev/update-tags.sh
 # use hubertus's newest libdispatch
 RUN cd ../swift-corelibs-libdispatch/libpwq && git checkout origin/master
 
+# apply PR 62
+RUN cd ../swift-corelibs-libdispatch && git fetch origin pull/62/head:PR62 && git checkout PR62
+
 # And now we build, like a good little linuxen. 
 # I believe this is what the linux build script does.  In practice, this builds a system into /tmp/install and then tars it up. 
 ADD presets.ini /swift-dev/swift/presets.ini

@@ -6,8 +6,7 @@ if [ "$SWIFT_TAG" == "master" ]; then
 fi
 
 #projects that have no tag
-NOTAG=("swift-dev" "swift-corelibs-libdispatch" "compiler-rt")
-#compiler-rt does not have a tag during swift-DEVELOPMENT-SNAPSHOT-2016-03-16-a but should be present in the next release
+NOTAG=("swift-dev" "swift-corelibs-libdispatch")
 for file in `find ../ -maxdepth 1 -type d`; do 
     skip=0
     for n in "${NOTAG[@]}"; do 
