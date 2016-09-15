@@ -1,7 +1,7 @@
 FROM debian:latest
 MAINTAINER Drew Crawford
 
-ENV SWIFT_TAG="__TAG__" RUNTIME_PACKAGES="clang libedit2 libpython2.7 libxml2 libicu52" BUILDTIME_PACKAGES="git ca-certificates python ninja-build cmake uuid-dev libbsd-dev libicu-dev pkg-config libedit-dev file libxml2-dev python-dev libncurses5-dev libsqlite3-dev libreadline6-dev rsync"
+ENV SWIFT_TAG="__TAG__" RUNTIME_PACKAGES="clang libedit2 libpython2.7 libxml2 libicu52" BUILDTIME_PACKAGES="git ca-certificates python ninja-build cmake uuid-dev libbsd-dev libicu-dev pkg-config libedit-dev file libxml2-dev python-dev libncurses5-dev libsqlite3-dev libreadline6-dev rsync libcurl4-openssl-dev wamerican vim"
 
 # for libdispatch, we also need more stuff
 ENV BUILDTIME_PACKAGES="$BUILDTIME_PACKAGES make gobjc automake autoconf libtool pkg-config systemtap-sdt-dev libblocksruntime-dev libkqueue-dev libpthread-workqueue-dev libbsd-dev"
@@ -36,8 +36,8 @@ RUN bash /swift-dev/update-tags.sh
 # RUN git am -3 < ../SAMPLE.patch
 
 # use CaffeinatedSwift
-RUN git remote add CaffeinatedSwift https://code.sealedabstract.com/CaffeinatedSwift/swift.git && git fetch CaffeinatedSwift --tags && git checkout caffeinated-$SWIFT_TAG
-RUN cd ../swift-corelibs-libdispatch && git remote add CaffeinatedSwift https://code.sealedabstract.com/CaffeinatedSwift/swift-corelibs-libdispatch.git && git fetch CaffeinatedSwift --tags && git checkout caffeinated-$SWIFT_TAG && git submodule update
+# RUN git remote add CaffeinatedSwift https://code.sealedabstract.com/CaffeinatedSwift/swift.git && git fetch CaffeinatedSwift --tags && git checkout caffeinated-$SWIFT_TAG
+# RUN cd ../swift-corelibs-libdispatch && git remote add CaffeinatedSwift https://code.sealedabstract.com/CaffeinatedSwift/swift-corelibs-libdispatch.git && git fetch CaffeinatedSwift --tags && git checkout caffeinated-$SWIFT_TAG && git submodule update
 
 # And now we build, like a good little linuxen. 
 # I believe this is what the linux build script does.  In practice, this builds a system into /tmp/install and then tars it up. 
